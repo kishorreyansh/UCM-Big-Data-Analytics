@@ -1,0 +1,13 @@
+﻿Add the Maven Hadoop dependency below to your MapReduce project in order for your IDE and its tools to recognize Hadoop classes.
+
+<dependency>
+<groupId>org.apache.hadoop</groupId>
+<artifactId>hadoop-mapreduce-client-app</artifactId>
+<version>3.2.0</version>
+</dependency>
+
+Please check your IDE documentation on how to add a dependency to your project. You can add it manually by editing the "pom.xml" file.
+In class, we showed how to create a MapReduce program using only basic commands like: nano, javac, and jar. The necessary dependencies are passed to the java compiler using the classpath option.
+
+You might also want to change the Java version in the pom.xml file (or in the project properties) to Java 8.
+

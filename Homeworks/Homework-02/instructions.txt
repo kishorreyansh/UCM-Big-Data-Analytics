@@ -1,0 +1,24 @@
+ 
+Group Assignment: Word Count - Hadoop Streaming﻿
+Due date: 6/12 by noon (12:00 PM)
+Total points: 25 pts
+------------------------------------------------------------------------------------------------------
+
+Instructions:
+
+﻿1. In class we wrote a MapReduce program in Java to compute the word counts for any given input. In this assignment you will repeat solving the same problem but using Hadoop streaming in Python.
+2. Create two scripts in Python namely "wordcount_map.py" and "wordcount_reduce.py" to be used by the mappers and reducers of the streaming job.
+3. Your script files must be executable (consider the chmod command), and must include the necessary shebang (like in the attached script files).
+4. Attached are the script files we used in class to demonstrate Hadoop streaming using ncdc data, namely: "maxtemp_map.py" and "maxtemp_reduce.py". They should be useful for getting started.
+5. Please submit only the two python script files, mentioned above in (2).
+6. Only one member from each group can make a submission. Please coordinate with each other before you attempt any submission on BB.
+7. You have two attempts to submit the two files. Please attach both files before you click on the "submit" button. 
+8. You can test your streaming application against the 3 plain text files that come with Apache Hadoop distribution, namely: (LICENSE|NOTICE|README).txt
+9. Note: recall the streaming command:
+$ mapred streaming \
+    -files <executable_map>,<executable_reduce> \
+    -mapper <executable_map> \
+    -reducer <executable_reduce> \
+    -input <input-path> \
+    -output <output-path>
+(extra options: -combiner, -numReduceTasks, etc.)

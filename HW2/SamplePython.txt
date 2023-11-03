@@ -1,0 +1,4 @@
+Hello Hadoop
+Hi Big Data
+Hello Hadoop Big Data
+Big Data is Hadoop

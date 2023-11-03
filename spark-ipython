@@ -1,0 +1,22 @@
+
+
+If you use Spark < 1.2 you can simply execute bin/pyspark with an environmental variable IPYTHON=1.
+
+IPYTHON=1 /path/to/bin/pyspark
+
+or
+
+export IPYTHON=1
+/path/to/bin/pyspark
+
+While above will still work on the Spark 1.2 and above recommended way to set Python environment for these versions is PYSPARK_DRIVER_PYTHON
+
+PYSPARK_DRIVER_PYTHON=ipython /path/to/bin/pyspark
+
+or
+
+export PYSPARK_DRIVER_PYTHON=ipython
+/path/to/bin/pyspark
+
+You can replace ipython with a path to the interpreter of your choice.
+

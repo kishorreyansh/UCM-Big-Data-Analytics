@@ -1,0 +1,19 @@
+package com.ncdc;
+
+import org.apache.hadoop.mapreduce.Job;
+
+public class MaxTemperature {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		if(args.length != 2) {
+			System.err.println("Usage: Max Temperature <input> <output>");
+		}
+		
+		Job job = Job.getInstance();
+		job.setJarByClass(MaxTemperature.class);
+		job.setJobName("Hello MapReduce !!");
+	}
+
+}

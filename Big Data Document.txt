@@ -1,0 +1,184 @@
+How to create a project using Maven:
+
+Refer: https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html
+
+Steps:
+1. Go to Command Prompt
+2. C:\Kishor\UCM\Big Data\Big Data Practise> mvn archetype:generate -DgroupId=BigDataCourse -DartifactId=WordCountProject -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+//-DartifactId=WordCountProject means a Project Name
+//-DarchetypeArtifactId=maven-archetype-quickstart means type of Maven project
+3. pom.xml
+<dependencies>
+	  <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-common</artifactId>
+            <version>3.3.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-mapreduce-client-core</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+  </dependencies>
+4. C:\Kishor\UCM\Big Data\Big Data STS\WordCountProject> ls target/
+5. C:\Kishor\UCM\Big Data\Big Data STS\WordCountProject> mvn package
+6. It will create WordCountProject-0.0.1-SNAPSHOT.jar file in target folder
+7. Go to Virtual Box
+8. Check input folders
+	$hdfs dfs -ls
+9. Create input folder under ls directory
+	$ hdfs dfs -mkdir inputwordcount
+10.  $ls
+11.  Copy txt file from KishorBigData/input/wordcountsample.txt inputwordcount
+	/KishorBigData/input$ hdfs dfs -put wordcountsample.txt inputwordcount
+12. From Local Downloads Folder pscp
+	c:\Users\Kisho\Downloads> pscp.exe -P 2222 "C:\Kishor\UCM\Big Data\Big Data STS\WordCountProject\target\WordCountProject-0.0.1-SNAPSHOT.jar" ucmo@localhost:
+	Password: cs5620
+13. Go to Virtual Box Home Folder and verify jar file
+14. Go to /KishorBigData> yarn jar WordCountProject-0.0.1-SNAPSHOT.jar com.wordcount.WordCount inputwordcount outputwordcount
+15.Go to /KishorBigData> hdfs dfs -cat outputwordcount/* | grep Hadoop
+	or hdfs dfs -cat outputlettercount-01/*
+
+NCDC Program Steps:
+1.Go to /KishorBigData/ncdc> yarn jar NCDCProject-0.0.1-SNAPSHOT.jar com.ncdc.MaxTemperature inputncdc/all outputncdc
+2. Go to /KishorBigData/ncdc> hdfs dfs -cat outputncdc/* | grep 1901
+
+----------------
+Final Exam:
+
+1. What are the three configurations modes for running Hive cli services with respect to the metastore service and the metastore database? Briefly, state the differences between them.
+Hive Metastore is the central repository of Apache Hive metadata. It stores metadata for Hive tables and partitions in a relational database.
+There are three modes for Hive Metastore deployment:
+Embedded Metastore
+Local Metastore
+Remote Metastore
+Embedded Metastore:
+In Hive by default, both metastore service and hive service runs in the same JVM by using embedded Derby Database.This mode also has limitation that, as only one embedded Derby database can access the database files at any one time.If we try to start the second session it produces an error when it attempts to open a connection to the metastore.
+Local Metastore:
+To overcome this limitation of Embedded Metastore, for Local Metastore was introduced. This mode allows us to have many Hive sessions i.e. many users can use the metastore at the same time.This can be achieved by using any JDBC databases like MySQL which runs in a separate JVM than that of Hive and metastore services which are running in the same JVM.
+Remote Metastore:
+In Remote mode, metastore runs on its own separate JVM, not in the Hive service JVM. If other processes want to communicate with the metastore server they can communicate using Thrift Network APIs.
+
+2. True or False
+False
+Hive is a Hadoop client and it runs on the top of the hadoop, so we don't need Hive to be installed in all node of Hadoop cluster.
+3.
+CREATE TABLE count1(
+	line STRING)
+	ROW FOMAT DELIMITED FIELDS TERMINATED BY ','
+	LOCATION 'foo.txt';
+LOAD DATA LOCAL INPATH 'foo.txt' INTO TABLE count1;
+
+4. 
+a. To List existing databases.
+default> show databases;
+b. To List existing tables.
+default> show tables;
+c.To List all existing tables in a database called companydb
+default> show tables in companydb
+d. To list all the records from employees table that exists in companydb
+default> SELECT * FROM companydb.employees;
+e. To list only five records from products table that exists in companydb
+default> SELECT * FROM companydb.products limit 5;
+f. To show the current execution engine.
+default> SET hive.execution.engine   //hive.execution.engine=mr (map reduce)
+g.To show the default file system in Hadoop
+default> set hive.metastore.warehouse.dir //hive.metastore.warehouse.dir = /user/hive/warehouse
+h. To display the content of the user's home directory in HDFS
+default> hdfs dfs -cat /user/ucmo/inputwordcount/*  //to display content
+default> hdfs dfs -ls /user/* 
+i. To Print the current working directory
+default> pwd
+j.  To append data from a file stored locally in the current working directory into an existing table called mytable. Let the filename be foo.txt
+default> LOAD DATA LOCAL INPATH 'foo.txt' INTO TABLE mytable;
+k. To find whether the table mytable is an external or not.
+default> describe extended mytable or describe formatted mytable.
+//Table Type: EXTERNAL_TABLE
+
+5. what is the effect of calling explode on the output of split in Hive? Consider for example explode(split('Welcome to Programming Hive!',''))
+
+6. Briefly state the difference between schema on read and schema on write.Which one is used by Hive?
+Schema on Read: 
+The data schema is not verified during the load time, rather it is verified while processing the query. This process in Hive called Schema on Read.
+Schema on Write: 
+- A table's schema is enforced at data load time, if the data being loaded doesnot conform to the schema,then it is rejected. This process is called add Schema on Write. The data is being checked against the schema when written into the database.
+Differences:
+SR: 
+1.SR helps in very fast initial data load, since data doesnot have to be read,parsed, and serialized in any database's internal format ads it is just a copy/move of a file
+2. SR is more flexible while considering two schemas for same underlying data. This is possible using Hive external tables
+SW:
+1. SW makes query time performance faster, as data is  already loaded in a particular format and it is easy to locate the column index or compress the data.
+2. SW takes longer time to load data into the databases.
+
+- SR is more efficient than SW So Hive uses SR.
+
+7. 
+External keyword tells Hive this table is external and Location clause is required to tell Hive where it's located.
+For External, Hive doenot assume its owns the data. Therefore, dropping the table doenotdelete the data, although the metadata for the table will be deleted.
+CREATE EXTERNAL TABLE IF NOT EXISTS mytable (
+	table_id INT,
+	table_name STRING)
+	ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+	LOCATION '/data/dataset-2020';
+ 
+8. 
+a.
+CREATE TABLE customers (
+cust_id INT,
+cust_name STRING,
+street STRING,
+city STRING,
+zip INT,
+region STRING
+)
+PARTITIONED BY ( county STRING);
+
+b.
+CREATE TABLE customers_logs (
+cust_id INT,
+cust_name STRING,
+street STRING,
+city STRING,
+zip INT,
+region STRING
+)
+PARTITIONED BY ( county STRING);
+LOAD DATA LOCAL INPATH '/data/cusutomers/usa' 
+INTO TABLE customers_logs;
+PARTITION (country='USA');
+LOAD DATA LOCAL INPATH '/data/cusutomers/usa' 
+INTO TABLE customers_logs;
+PARTITION (country='Canada');
+LOAD DATA LOCAL INPATH '/data/cusutomers/usa' 
+INTO TABLE customers_logs;
+PARTITION (country='Mexico');
+
+set hive.exec.dynamic.partition=true;
+set hive.exec.dynamic.partition.mode=nonstrict
+INSERT INTO TABLE customers_logs partition (country) ;
+SELECT cust_id,cust_name,street,city,zip,region,country FROM customers_logs;
+c.
+Yes, we can use dynamic partitioning to avoid creating id's of partitions as we have many countries i.e., USA,Canada and Mexico. Also, we have loaded data using single SQL query using dynamic partition in 8.b
+
+d.
+Based on filter condition using where clause in partition table, we no need to scan thousands of records it is only necessary to scan the content of one directory for larger data sets. Partitions can dramatically improve Query Performance.
+
+9. Give the command in spark python shell to find the total no of lines in all files stored under hdfs directory: 'data/logfiles'
+
+lines = sc.textFile('data/logfiles/*')
+lines.count()
+
+10. Repeat 9 but now we are just interested in those lines that contain the word 'error' ,case insensitive
+python_lines = lines.filter(lambda line: 'python' in line.lower()) //here lower means case insensitive
+python_lines.count() 
+
+or 
+
+errorsRDD = lines.filter(lambda x: "error" in x.lower())
+errorsRDD.count() 
+
+11. For the same files in Q9 give the command in spark python shell to find the total number of characters. Please note that we can find the length of a string by using the len() function
+character_count = lines.map(lambda: line : len(line))
+character_count.sum()
+
+12. give the command in spark python shell to find the sum of all values in the range 0-99

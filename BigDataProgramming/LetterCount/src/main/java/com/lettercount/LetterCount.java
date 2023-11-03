@@ -1,0 +1,78 @@
+package com.lettercount;
+
+/*
+Group 10
+------------------------------------------
+Kishor Kumar Andekar - 700744713
+Venkata Suraj Gamini - 700744962
+------------------------------------------
+*/
+
+import java.io.IOException;
+
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.Mapper.Context;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+public class LetterCount {
+	
+	public static void main(String[] args) throws Exception {
+		// TODO Auto-generated method stub
+		
+		if(args.length != 2) {
+			System.err.println("Usage: Letter Count <input-path> <output-path>");
+			System.exit(-1);
+		}
+		
+		Job job = Job.getInstance();
+		job.setJarByClass(LetterCount.class);
+		job.setJobName("Hello MapReduce LetterCount Program !!");
+		
+		FileInputFormat.addInputPath(job, new Path(args[0]));
+		FileOutputFormat.setOutputPath(job, new Path(args[1]));
+		
+		job.setMapperClass(LetterCountMapper.class);
+		job.setReducerClass(LetterCountReducer.class);
+
+		job.setOutputKeyClass(Text.class);
+		job.setOutputValueClass(IntWritable.class);
+
+		System.exit(job.waitForCompletion(true) ? 0 : 1);
+	}
+	
+	public static class LetterCountMapper extends Mapper<LongWritable,Text, Text,IntWritable>{
+		@Override
+		public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+			String line = value.toString();
+			line.toUpperCase().replaceAll("[^A-Z]", "");
+			line.toUpperCase().replaceAll("\\s+", "");
+			String tokenzier[] = line.split("");
+			for(String singlecharacter: tokenzier) {
+				if(singlecharacter.length() > 0) {
+					context.write(new Text(singlecharacter), new IntWritable(1));
+				}
+			}
+			String total = "Total";
+			 context.write(new Text(total), new IntWritable(line.length()));
+		}
+	}
+
+	public static class LetterCountReducer extends Reducer<Text, IntWritable, Text, IntWritable>{
+		@Override
+		public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
+			int totalCharactersCount = 0;
+			for(IntWritable value: values ) {
+				totalCharactersCount += value.get();
+			}
+			context.write(key,new IntWritable(totalCharactersCount));
+		}
+	}
+}
+

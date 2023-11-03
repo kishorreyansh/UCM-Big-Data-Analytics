@@ -1,0 +1,24 @@
+1. HDFS is an efficient distributed filesystem for reading and writing large amount of data in parallel ? T or F ? True
+	Is HDFS a parallel file system?
+	What is HDFS? Hadoop Distributed File System overview
+	Because HDFS stores data in a distributed manner, the data can be processed in parallel on a cluster of nodes.
+2.The MapReduce application will use Zero reduces. If you skip setting the reducer clases in the Driver. T or F ? False
+3. Setting the Mapper and Reducer classes for the MapReduce application in the driver code if optional. T or F? True
+	Setting the Mapper and Reducer classes is Optional , if not in your driver class, Hadoop uses its default. Refer Part 4 PPT 31 Page
+4. In HDFS HA(High Availability) graceful is a failover that is initiated by the administrator usually for routine maintenance? T or F ? True
+	There are two types of failover, that is, Graceful Failover and Automatic Failover.
+	1. Graceful Failover
+	Graceful Failover is initiated by the Administrator manually. In Graceful Failover, even when the active NameNode fails, the system will not automatically trigger the failover from active NameNode 	to standby Namenode. The Administrator initiates Graceful Failover, for example, in the case of routine maintenance.
+	2. Automatic Failover
+	In Automatic Failover, the system automatically triggers the failover from active NameNode to the Standby NameNode.
+5. Among YARN available schedulers the FIFO scheduler is the one recommended for shared clusters . T or F ? False
+6. Is data locality in MapReduce applies only to the mappers rather than the mappers and reducers True or false? True
+	No, Data-Locality concept applies to MAPPERS only.
+7. Hadoop distcp is much more efficient than HDFS cp command for copying data to and from Hadoop filesystems in parallel. T or F? True
+8. The only programming language that can be used in MapReduce application is Java ? T or F ? False
+	Yes, MapReduce program can be written in other programming languages besides Java.
+9. In MapReduce !(before YARN) we used containers to manage and allocate resources among jobs ? T or F ?
+10. Hadoop is meant for batch processing rather than real time processing T or F ? True
+11. In Contract to MapReduce 1, YARN Resource manager will keep track of the available resources and the running jobs, while each application will track its own progress. T or F ? True
+12. In HDFS high availability (HA) , in the event of failure of the active namemode the secondary namemode takes over its duties. T or F ? False
+13. The default Scheduling policy within each queue is fair under the Fair Scheduler , While it is fifo under the capacity Scheduler . T or F ? True

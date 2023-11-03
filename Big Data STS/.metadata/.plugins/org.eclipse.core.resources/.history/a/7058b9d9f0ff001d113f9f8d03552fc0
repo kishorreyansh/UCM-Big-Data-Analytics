@@ -1,0 +1,13 @@
+package com.ncdc;
+
+public class MaxTemperature {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		if(args.length != 2) {
+			System.err.println("Usage: Max Temperature <input> <output>");
+		}
+	}
+
+}

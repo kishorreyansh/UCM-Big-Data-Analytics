@@ -1,0 +1,42 @@
+package com.lettercount;
+
+import java.io.IOException;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.Mapper.Context;
+
+public class LetterCount {
+	
+	public static class LetterCountMapper extends Mapper<LongWritable,Text, Text,IntWritable>{
+		@Override
+		public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+			String line = value.toString();
+			line.toUpperCase().replaceAll("[^A-Z]", " ");
+			line.toUpperCase().replaceAll("\\s", "");
+			String tokenzier[] = line.split("");
+			for(String singlecharacter: tokenzier) {
+                context.write(new Text(singlecharacter), new IntWritable(1));
+			}
+			String total = "total";
+			 context.write(new Text(total), new IntWritable(line.length()));
+		}
+	}
+
+	public static class LetterCountReducer extends Reducer<Text, IntWritable, Text, IntWritable>{
+		@Override
+		public void reduce(Text key, Iterable<IntWritable> values, Context context) {
+			int totalCharactersCount = 0;
+			for(IntWritable value: values ) {
+				totalCharactersCount += value.get();
+			}
+		}
+	}
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

@@ -1,0 +1,22 @@
+package com.lettercount;
+
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Mapper;
+
+public class LetterCount {
+	
+	public static class LetterCountMapper extends Mapper<LongWritable,Text, Text,IntWritable>{
+		
+	}
+
+	public static class LetterCountReducer extends Reducer<Text, IntWritable, Text, IntWritable>{
+		
+	}
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

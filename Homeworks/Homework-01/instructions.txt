@@ -1,0 +1,32 @@
+ 
+Group Assignment: ﻿Letter Count﻿
+Due date: 6/12 by noon (12:00 PM)
+Total points: 25 pts
+------------------------------------------------------------------------------------------------------
+
+Instructions:
+
+﻿1. Write a MapReduce program to find the frequency of each letter, case insensitive, in user-specified input files. For example, "The quick brown﻿﻿﻿ fox jumps over the lazy dog" as input should generate the following output (letter,count) pairs: (T, 2), (H, 1), (E, 3), etc.
+2. Your program also must find the total count of letters, case insensitive, from the input. Generate one extra output pair whose key is the string "total" and whose value is the total count of all letters. 
+3. Test your program against the 3 attached input files.
+4. The input and output will be read/written from/into HDFS.
+5. Your program must consist of a single file, namely, LetterCount.java. Declare the mapper and reducer classes as inner classes.
+6. Please submit only the Java file LetterCount.java on Blackboard.
+6. Only one group member can make a submission on behalf of the group, please make sure to coordinate with each other before you submit your file on Blackboard.
+7. Please add your group number, and group member names to the beginning of the file as a comment.
+8. You will have only two attempts to submit your file. Make sure you attach the Java file before you click on the submit button. Email submissions won't be accepted.
+9. I might ask each student/group to demonstrate their program for grading.
+10. I've attached the WordCount.java file as an example. You might find it useful for getting started.
+
+
+Demo Instructions:
+1. You must demonstrate the exact code that was submitted onto BB.
+2. You will be asked to run the necessary commands in a terminal to:
+2.1. Upload the input files into HDFS. (starting HDFS if necessary)
+2.2. Compile your code. (javac)
+2.3. Package the compiled code into a jar file. (jar)
+2.4. Run the job in Hadoop using YARN. (after starting YARN if necessary)
+2.5. List the output files in HDFS.
+2.6. Display the output in the terminal window.
+2.7. Etc.
+3. There might be some questions related to the code, and to the whole process.

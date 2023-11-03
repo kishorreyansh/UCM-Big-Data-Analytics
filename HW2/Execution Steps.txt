@@ -1,0 +1,5 @@
+KishorBigData/hm2$ cat SamplePython.txt | python wordcountmapper.py
+KishorBigData/hm2$ cat SamplePython.txt | python wordcountmapper.py | sort | python wordcountreducer.py
+
+https://www.youtube.com/watch?v=mhisPejz-6c
+https://youtube.com/playlist?list=PL_HHYoWqerrLr3GG4eubXjjaJhfxw0fmu

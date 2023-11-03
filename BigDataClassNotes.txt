@@ -1,0 +1,626 @@
+Big Data Analytics - 31126 - MW 330 - Summer 2023
+
+jps
+hdfs dfs -ls
+start dfs .sh //to start dfs
+
+$hdfs dfs -ls /user/ucmo
+$ hdfs dfs -ls /
+
+Virtual machine
+localhost:9870/ - //access webui with hdfs inside vm
+
+localhost:9870/ - from outside vm
+$lscpu
+$ yarn help
+$ yarn app help
+
+yarn web ui
+port no 8088
+by default 8080
+
+yarn: resource manager,node manager,container
+
+Map Reduce:
+
+default processing component
+comes as part of hadoop disturbution
+map reduce is a programming module
+map reduce application need to go 2 phases
+	map
+	reduce
+MapReduce:
+3 map task attempts and 2 reduce task attempts
+for every map task we run 3 map tasks
+
+Hadoop components:
+no of mappers depends on input
+shuffle and sort run by runtime
+
+Map reduce everything we read or everything we write output must be key value pair
+every line in input file treat as one map
+- we split line into tokenziation
+- collects the map of same key(suffle&sort) example: the 1,1,1,1
+	mapper output -> intermediate data
+- to call reduce function 
+	Intermediate data -> reduce -> Reducer Output -> Final Result
+- three blocks creates 3 maps
+- one block in hdfs is equal to one split in mapreducer
+- 10 splits in mapreducer than we create 10 reducer
+
+Map Application : 3 classes
+	Driver class //run on client machine to submit the job
+	Mapper Class //
+	
+24/05/2023
+
+Every key and value must be object. It wont be primitives.
+map reduce at runtime reading and writing for serialzable
+
+javac *.java -cp(hadoop classpath)
+jar cf wc.jar *.class
+ls
+
+Java IDE: maven or gradle to manage java projects
+$ mvn-proj -DartifactId=wordcount
+$ ls
+$ pom.xml //to add hadoop dependencies
+	<properties>
+		<maven.compiler.source>1.8</>
+		<maven.compiler.target>1.8</>
+	</properties>
+	<dependency>
+		<groupId>org.apache.hadoop</groupId>
+		<artifactId>hadoop-mapreduce-client-app</artifactId>
+		<version>3.2.0</version>
+	</dependency>
+
+Class Name: WordCount.java //This file for Driver
+Class Name: WordMapper.java //
+Class Name: WordReducer.java
+
+//Mapper reads key value pairs
+//to split
+public class WordMapper extends Mapper<IntWritable, Text, Text, IntWritable>
+{
+	//overriding write method
+	@override
+	//context is define in mapper
+	public void map(){
+		\\W+
+		substring of any link \\W +character by charcater
+		String line = value.toString().toLowerCase();
+	}
+	
+}
+
+WordReducer.java
+	int count=0;
+
+	
+	
+
+WordCount.java
+public class WordMapper extends 
+{
+	main() throws Exception{
+		if(args.length !=2){
+			System.exit(-1);
+		}
+		Job job = Job.getInstance();
+		job.setJobName(name: "Word Count");
+		job.setJarByClass(name: "Word Count");
+		
+	}
+}
+submit //asyncronous: exit the other code , waits for job to complete before continouing
+waitForCompletion //syncronous
+
+maven:
+$ls target/
+$ mvn package //it will create a jar file in target
+$ ls target/
+
+
+Start Hadoop:
+
+$ jps
+$ start-dfs.sh
+$ start-yarn.sh
+$ hdfs dfs -ls
+$ hdfs dfs -mkdir mw330/wc-in
+$ ls apache/hadoop/*.txt
+$ hdfs dfs -put apache/hadoop/*.txt mw330/wc-in
+localhost:9870 //hdfs directory
+
+
+submit the jar file or start command to our aplication
+//run under visual studio terminal
+$yarn jar target/wordcount-1.0-SNAPSHOT.jar oasis.apps.WordCount mw330/wc-in mw330/wc-out
+localhost:8088 //yarn directory
+$ hdfs dfs -ls mw330/wcout
+$ hdfs dfs -ls -h mw330/wcout
+// to see output
+$ hdfs dfs -cat mw330/wcout/* | grep user
+$ hdfs dfs -cat mw330/wcout/* | grep the
+
+hdfs dfs -ls
+hdfs dfs -mkdir inputwordcount
+downloads> pscp.exe -P 2222 "c:\BigData\target>.jar ucmo@localhost:
+
+VM Box:
+sftp://ucmo@localhost:2222/home/ucmo
+cs5620
+
+
+reduce: reducer will start runing after receiving all values
+
+https://learning-oreilly-com.cyrano.ucmo.edu/library/view/hadoop-the-definitive/9781491901687/ch02.html#analyzing_the_data_with_unix_tools
+
+NCDC Program:
+hadoop definitve guide git in google
+$ hadoop version // to check hadoop version
+$cd apache/examples/
+$ls
+apache/examples$ cd mapred/
+apache/examples/mapred$ ls
+apache/examples/mapred$ ls ncdc
+apache/examples/mapred$ cd ncdc/input/
+apache/examples/mapred/ncdc/input$ ls -l
+apache/examples/mapred/ncdc/input$ cat max_temperature.sh
+apache/examples/mapred/ncdc/input$ ls all
+apache/examples/mapred/ncdc/input$  ./max_temperature.sh
+
+IDE:
+better way to run:
+ncdc$ yarn jar target/ncdc-1.0-SNAPSHOT.jar com.ncdc.MaxTemp w300/ncdc/all w300/ncdc-out-01
+ncdc$ hdfs dfs -ls w300/ncdc-out-01
+ncdc$ hdfs dfs -cat w300/ncdc-out-01/* //output of the application
+
+Runing Hadoop in 3 different modes:
+- standalone
+-local mode
+- default
+By default we are using standalone mode(local filesystem for storage) there is no yarn
+-pseudo distributed mode //configure hadoop to start using hdfs
+ .Other way to run:
+export HADOOP_CLASSPATH=hadoop-examples.jar
+hadoop MaxTemp input/ncdc/sample.txt output
+-by default split size is one block
+- one split cant be stored in one node or machine
+- Data locality
+- In mapreduce it is not recommended to go beyond block size
+- 10 split - 10 blocks - 10 mappers
+- small split is better for processing
+- optimization feature  - reduce total execution time  - combiner function
+- combiner can be used in reducer class
+	job.setCombinerClass(MaxTemperatureReducer.class);
+-----------------------------------------------------------
+05-06-2023
+
+Programming Hive:
+
+- allows you to use sql to connect hdfs
+-hive has it own dialect called hql or HiveQL
+- hive is data warehouse application
+- hive is not a full database
+-hiveql doesnot confirm to ansi sql standards
+-Interact with Hive
+	- we use CLI or graphical user interface
+	-  hive supports jbdc,odbc
+	- driver conevrts sql statements into map reduce
+	- metastore 
+		- 2 components metastore surface and meta store database
+
+Java Wordocunt versus Hive:
+Steps:
+1. start hadoop
+2. start-dfs.sh
+3. hdfs dfs -ls
+4. start-yarn.sh
+5. jps
+6. ls apache/
+7. hive --service help
+8. hive --servie cli --help 
+9. hive--service cli //default hive console or directly start hive
+10. hive
+11. hive> show  databases;
+12. in hdfs create input directory
+13. hive> CREATE TABLE docs (line STRING);
+14. hive> SHOW tables;
+15. SELECT * FROM docs;
+16. hive> LOAD DATA LOCAL INPATH 'apache/hadoop/*.txt' INTO TABLE docs;
+17. SELECT * FROM docs LIMIT 10;
+18. //frequency of wordcount
+	- how to tokenzise in hql
+hive> SELECT split('Welcome to Programming Hive','\\W+');
+	//\\W+ will treat any aplhanumeric
+19. hive> SELECT explods split('Welcome to Programming Hive','\\W+');
+	explods means extract all individuals elements 
+20. hive> SELECT explods(split(lower('Welcome to Programming Hive'),'\\W+'));
+21. hive>  !clear;
+22 hive>
+CREATE TABLE counts AS
+SELECT word, count(1) 
+FROM (SELECT explode(split(lower(line), '\\W+')) word FROM docs) W 
+GROUP BY word 
+ORDER BY word;
+	// we use GROUPBY to see frequency of words sharing same key value pair, every group will summarize by some aggrgation
+	
+- execute 2 mapreduce jobs in hadoop
+23. SELECT  * FROM counts LIMIT 10;
+24. SELECT count(*) FROM counts;
+25. DESCRIBE counts;
+26. SELECT  * FROM counts WHERE word = 'user';
+27. SELECT  * FROM counts WHERE LIKE '%user%';
+	
+- Ware house - differnt location for storing data files
+
+- hdfs dfs -ls /user/hive
+	/user/hive/warehouse - all created tables stores in this location
+- hdfs dfs -ls /user/hive/warehouse
+- CREATE DATBASE foo;
+- USE foo;
+- create tale bar(v int);
+- hdfs dfs -ls -R /user/hive/warehouse/
+
+BeeLine:
+$ hive --service beeline
+$ beeline
+beeline>  !connect jdbc:hive2:///
+	- it connected jdbc database
+0: jdbc:hive2///> show databases;
+0: jdbc:hive2///> !q // to quit
+0: jdbc:hive2///> beeline --sient=true --showDbInPrompt=true
+0: jdbc:hive2///> drop database foo cascade;
+0: jdbc:hive2///> select * from docs limit 10;
+
+$hive -e "show databases;"
+$ hive -f myscript.hql
+
+hive-site.xml hadoop in local mode
+
+
+$hive
+hive> set fs.defaultFS; //look at different configurations
+----------------------------
+4.1
+$ hive --service metastore //running metastore database
+$ hive --service hiveservice2 //starting hive server 2
+- Hiveserver = Thrift Server
+$hive
+hive>show databases;
+hive>show tables;
+hive>drop table hadoopcounts;
+hive> select * from hadooptbl limit 10;
+hive>  create table words as select explode(split(lower(line), '\\W+')) as word from hadooptbl;
+hive> select * from words limit 20;
+hive> " welcome -- to -- hadoop."
+hive> create table counts as select word,count(1) from words GROUP BY word order by word     
+hive> select * from counts limit 10;
+hive> select * from counts where word like %the%;
+hive>set hive.cli.print
+hive? set hive.cli.print.db;
+hive? set hive.cli.print.current.db;
+hive> hive? set hive.cli.print.db=true;
+hive> set hive.execution.engine;
+hive> beeline
+beeline>!connect jdbc:hive2:///
+0: jdbc:hive2///> show databases;
+0: jdbc:hive2///>show tables;
+0: jdbc:hive2///> select * from counts where word like '%user%';
+$ hive --service help
+$hive --service beeline
+$ hdfs dfs -ls
+$ hdfs dfs -ls /
+$ hdfs dfs -ls /user/hive/warehouse
+- in hive everydatabase there will be directory
+$ hdfs dfs -ls /user/hive/warehouse/s80*
+$ hdfs dfs -ls /user/hive/warehouse/s80*/hadopt*
+	-LICENSE.txt,NOTICE.txt,README.txt
+$ hdfs dfs -ls /user/hive/warehouse/s80*/counts
+	000000_0 //we use only one reducer
+	no of output files = no of reducer
+- hive.site.xml
+	<property>
+		<name> ConnectionURL</name>
+		<value> jdbc:mysql://db1.mydomain.pvt/hive_db</value>
+	</property>
+	//DriverName,ConnectionUserName,ConnectionPassword
+Command Options:
+$ hive --service help
+$hive --service cli --help //tell about cli command line options
+$hive --service beeline --help //tell about beeline command line options
+- hwi Hive Web Interface doesnot exist any more
+Hive "One shot" Command //non interactive mode
+$ hive -e "show databases;"
+--------------
+4.2
+
+Data Types in Hive:
+
+INT,STRING,TIMESTAMP,BINARY
+
+0: jdbc:hive2///> select timestamp("2022-04-02");
+0: jdbc:hive2///> select timestamp("2022-05-07") - timestamp("2022-04-02");
+
+No of Collections Data Types:
+STRUCT,MAP,ARRAY (java generics - class template)
+struct - class without methods, collections of fields
+map - popular data structures,implemented using hash table , elements by index by key and value pairs
+Array - collections of values of same type
+Union - we wont use
+
+0: jdbc:hive2///> select struct('CS', 5620 , 'Big Data'); //automatically creates values as column names
+0: jdbc:hive2///> select struct('CS', 5620 , 'Big Data').col2;
+0: jdbc:hive2///> select map('symbol','CS', 'number',5620 , 'title','Big Data'); //these are having 3 pairs
+0: jdbc:hive2///> select map('symbol','CS', 'number',5620 , 'title','Big Data')['title'];
+0: jdbc:hive2///> select array('symbol','CS', 'number',5620 , 'title','Big Data');
+0: jdbc:hive2///> select array('symbol','CS', 'number',5620 , 'title','Big Data')[2];
+
+-------------------
+5.1
+
+CREATE TABLE employees (
+	name STRING,
+	salary FLOAT,
+	subordinates ARRAY<STRING>,
+	deductions MAP<STRING, FLOAT>,
+	address STRUCT<street:STRING, city: STRING, state:STRING, zip:INT>);
+
+Hive's default record and field delimiters
+
+\n - each line is a record
+^A (control A) - separates all fields (columns) \001
+^B - separates all elements
+^C - separates key from map
+
+programming hive git in google search
+
+$jdk8
+$start-dfs.sh && start-yarn.sh
+- 2 options to run hive console
+	1. recommended one beeline
+	2. basic i.e., running hive command
+For beeline - connect or start hive server
+$ hive --service metastore 
+$ hive --service hiveserver2
+$ hive
+hive> show databases;
+hive> ! clear
+
+beeline 
+$ hive --service beeline --help
+$beeline --showDbInPrompt=true --silent=true
+beeline> //we can run shell commands
+beeline> !sh clear
+beeline> !connect jdbc:hive2:///    -start hive server
+beeline> !connect jdbc:hive2://localhost:10000
+ 0: jdbc:hive2://localhost:10000 (default)> show databases;
+ 0: jdbc:hive2://localhost:10000 (default)> use s800;
+ 0: jdbc:hive2://localhost:10000 (s800)> show tables;
+ 0: jdbc:hive2://localhost:10000 (s800)> create table employees (
+ 0: jdbc:hive2://localhost:10000 (s800)> name string,
+ 0: jdbc:hive2://localhost:10000 (s800)> salary float,
+ 0: jdbc:hive2://localhost:10000 (s800)> subordinates ARRAY<STRING>,
+ 0: jdbc:hive2://localhost:10000 (s800)>deductions MAP<STRING, FLOAT>,
+ 0: jdbc:hive2://localhost:10000 (s800)> address STRUCT<street:STRING, city:STRING, state:STRING, zip:INT>
+ 0: jdbc:hive2://localhost:10000 (s800)> );
+ 0: jdbc:hive2://localhost:10000 (s800)> show tables;
+ 0: jdbc:hive2://localhost:10000 (s800)> LOAD DATA LOCAL INPATH 'Downloads/employees.txt' INTO TABLE employees;
+ 0: jdbc:hive2://localhost:10000 (s800)> select * from employees;
+ 0: jdbc:hive2://localhost:10000 (s800)> select * from employees where address.city == 'Chicago' ;
+ 0: jdbc:hive2://localhost:10000 (s800)> select name,deductions['State Taxes'] from employees where address.city == 'Chicago' ;
+ 0: jdbc:hive2://localhost:10000 (s800)> select name,subordinates[0] from employees ;
+
+Schema on Read:
+	Hive can only enforces queries on read. 
+HiveQL: Data Definition
+DDL - update,add, if it fix schema and content(create,alter,drop)
+DML - dont change anything about metadata (select,insert,update)
+
+Hive Commands:
+0: jdbc:hive2://localhost:10000 (s800)> show databases;
+0: jdbc:hive2://localhost:10000 (s800)> show tables;
+0: jdbc:hive2://localhost:10000 (s800)> show tables in default;
+0: jdbc:hive2://localhost:10000 (s800)> use default;
+0: jdbc:hive2://localhost:10000 (default)>select * from employees;
+	error 
+0: jdbc:hive2://localhost:10000 (default)> select * from s800.employees;
+0: jdbc:hive2://localhost:10000 (s800)> describe employees;
+0: jdbc:hive2://localhost:10000 (s800)> describe database s800;
+hive>show databases; //default
+hive> create database human_resources;
+hive> create database IF NOT EXISTS finanicials;
+0: jdbc:hive2://localhost:10000 (s800)> set hive.metstore.warehouse.dir;
+- DBeaver 22.0.2 is a tool
+- create database using location
+hive> create database financials Location '/my/directory';
+hive> create database financials comment 'Holds tables';
+
+hive> DROP DATABASE IF EXISTS financials;
+hive> DROP DATABASE IF EXISTS financials CASCADE;
+0: jdbc:hive2://localhost:10000 (s800)> describe extended employees;
+0: jdbc:hive2://localhost:10000 (s800)> describe formatted employees;
+0: jdbc:hive2://localhost:10000 (s800)> show tblproperties employees;
+0: jdbc:hive2://localhost:10000 (s800)> describe s800.employees address;
+$ hdfs dfs -ls data
+$ hdfs dfs -ls data/stocks
+0: jdbc:hive2://localhost:10000 (s800)> create external table stocks (
+0: jdbc:hive2://localhost:10000 (s800)> xchange string,
+0: jdbc:hive2://localhost:10000 (s800)> symbol string,
+0: jdbc:hive2://localhost:10000 (s800)> ymd string,
+0: jdbc:hive2://localhost:10000 (s800)> price_open float,
+0: jdbc:hive2://localhost:10000 (s800)> price_high float
+0: jdbc:hive2://localhost:10000 (s800)> price_low float
+0: jdbc:hive2://localhost:10000 (s800)> price_close float
+0: jdbc:hive2://localhost:10000 (s800)> volume int,
+0: jdbc:hive2://localhost:10000 (s800)> price_adj_close float
+0: jdbc:hive2://localhost:10000 (s800)> )
+0: jdbc:hive2://localhost:10000 (s800)> row format delimited fields terminated by ','
+0: jdbc:hive2://localhost:10000 (s800)> location 'data/stocks';
+0: jdbc:hive2://localhost:10000 (s800)> select * from stocks limit 20;
+
+--------------
+5.2
+
+0: jdbc:hive2://localhost:10000 (s800)> create table numbers (value int, type string);
+0: jdbc:hive2://localhost:10000 (s800)> insert into table numbers(3, 'odd'),(2, 'even'), (6, 'even'), (5, 'odd') , (2, 'even'). (8, 'even'), (1, 'odd');
+0: jdbc:hive2://localhost:10000 (s800)> select * from numbers;
+0: jdbc:hive2://localhost:10000 (s800)> select avg(value) from numbers;
+0: jdbc:hive2://localhost:10000 (s800)> select type,  avg(value)  group by type
+0: jdbc:hive2://localhost:10000 (s800)> dfs -cat /user/hive/warehouse/s800.db/numbers/*;
+0: jdbc:hive2://localhost:10000 (s800)> select avg(value) from numbers where type == 'odd';
+0: jdbc:hive2://localhost:10000 (s800)> create table numbers_p (value int) partitioned by (type string);
+0: jdbc:hive2://localhost:10000 (s800)> insert into table numbers_p partition (type = 'odd') values (3),(5),(1);
+0: jdbc:hive2://localhost:10000 (s800)> insert into table numbers_p partition (type = 'even') values (2),(6),(8),(4);
+0: jdbc:hive2://localhost:10000 (s800)> select * from numbers_p;
+0: jdbc:hive2://localhost:10000 (s800)> select avg(value) from numbers_p where type == 'odd';
+0: jdbc:hive2://localhost:10000 (s800)> dfs -ls -R /user/hive/warehouse/s800.db/numbers_p/*;
+0: jdbc:hive2://localhost:10000 (s800)>dfs -cat /user/hive/warehouse/s800.db/numbers_p/type=odd/*;
+0: jdbc:hive2://localhost:10000 (s800)> set hive.mapred.mode;
+0: jdbc:hive2://localhost:10000 (s800)>set hive.mapred.mode=strict;
+0: jdbc:hive2://localhost:10000 (s800)> show partitions numbers_p;
+--------------------------------------
+5.3
+ $ spark-shell //spark scala interactive shell or console
+>quit
+$ pyspark //using python shell
+$ export PYSPARK_DRIVER_PYTHON=ipython
+$pyspark
+iPython Shell:
+[1]: sc //entry point is spark context
+[1]: type[sc] //spark commands run against rdd's
+[1]: lines = sc.textFile('sparktext') //create an RDD called lines
+[1]: lines.count // count no of items in rdd
+[1]: lines.first() //first item in rdd,first line of README.md
+
+[1]: python_lines = lines.filter(lambda line: 'python' in line.lower()) //here lower means case insensitive
+[1]: python_lines.count()
+
+or
+
+[1]: def has python(x):
+	return 'python' in x.lower()
+[1]: python_lines_t = lines.filter(has.python)
+[1]: python_lines_t.take(3)
+
+word count example:
+[1]: %who //gives user defined variables
+In [1]: import re //import regular expression module
+In [1]: re.split("\\W+","Hello ! World ! Welcome to spark")
+or 
+[1]: "Hello, Welcome to spark".split()
+["Hello,"Welcome","to","spark"]
+[1]:"Hello, Welcome to spark".split("\\W+")
+output: ["Hello,"Welcome to spark"]
+
+[1]: counts_rdd = lines.flatMap(lambda line re.split("\\W+",line)).map(lambda word: (word.lower(), 1)).reduceByKey(lambda x,y: x+ y)
+[1]: counts_rdd.take(5)
+output:
+[('',106),('is',23),('the',2)]
+[1]: counts_rdd.filter(lambda p: 'user' in p[0]).collect()
+
+bash terminal:
+$ ls apache/spark/README.md
+$ hdfs dfs -mkdir sparktext
+$ hdfs dfs -put apache/spark/README.md sparktext
+$ hdfs dfs -ls sparktext
+---------------------------------
+6.1
+
+
+
+-------------------------------------------
+19-06-2023
+
+- Driver is replacement of Hive
+- manage and external tables in HIve
+- external means delete table from hadoop but not data files in hdfs
+- manage means delete table from hadoop but it also delete data files in hdfs
+- partitions table means scan part of the table like one column
+- partitions table can dynamically located in different locations
+ 
+Apache Spark
+-cluster computing platform
+- spark doesnot have storage
+-spark is 100 times faster than map reduce
+-data in memory in spark whereas mapreduce in disk
+-spark supports multiple programming language
+-Spark is written in scala,it itself is a jvm language, it requires Java JRE
+
+Virtual Machine:
+- first start dfs i.e., start-dfs.sh
+-$ start hadoop
+- spark has 2 options - python and scala
+$ pyspark
+>>> PYSPARK_DRIVER_PYTHON=ipython pysark
+In [1]: !pwd or !clear
+- spark doesnot RDDS[Resilient disturbtued dataset]
+
+$ hdfs dfs -ls data/hadoop-txt
+In [1]: for i in range(10): print(i) //python program
+-Entry point for spark api is spark context
+In [1]: sc // start using rdd
+In [1]: spark //start using sequel,dataframes
+In [1]: lines = sc.textFile('data/hadoop-txt')
+In [1]: lines
+In [1]: lines.first() //to retrive one item from rdd
+In [1]: lines.take(10) //to retrive 10 lines item from rdd
+
+In [1]: lines = sc.textFile('data/hadoop-txt')
+In [1]: lines.count()
+
+to exit shell press ctrl D
+In [1]: hadoop_lines = lines.filter(lambda line: 'hadoop' in line.lower())
+-lambda is short anyoyns functions, use one time,
+In [1]: lines.take(5)
+
+Standalone Application:
+- create sparkcontext object
+
+Wordcount program in spark
+In [1]: %who
+In [1]: import re //import regular expression module
+In [1]: re.split("\\W+","Hello ! World ! Welcome to spark")
+In [1]: re.split("\\W+","Hello ! World ! Welcome to spark".lower())
+- In rdd running actions(output will be java object or host language) or transformations(output will be spark rdd)
+In [1]: lines.map(lambda line: re.split("\\W+",line.lower())).take(10)
+- map() is colection of python,flatMap should be collection
+In [1]: lines.flatMap(lambda line: re.split("\\W+",line.lower())).take(10)
+In [1]: lines.flatMap(lambda line: [tok for tok in re.split("\\W+",line.lower()) if len(tok) > 0 ]).take(10)
+- above line removes empty strings
+In [1]: counts = lines\
+	: .flatMap(lambda line: [tok for tok in re.split("\\W+",line.lower()) if len(tok) > 0 ])\
+	: .map(lambda word: (word,1))\
+	: .reduceByKey(lambda x, y: x + y)
+In [1]: type(counts)
+	pyspark.rdd.PipelinedRDD
+	// counts is a rdd
+In [1]: counts.take(10)
+In [1]: counts.count()
+
+Wordcount spark - apache official website
+https://spark.apache.org/examples.html
+
+Programming with RDDs
+RDDS[Resilient disturbtued dataset]
+- Each RDD is split into multiple partitions
+In [1]:   nums = list(range(100)) //python code
+In [1]:  sum(nums) //python code
+In [1]: nums_rdd = sc.parallelize(range(100)) //rdd code
+In [1]: nums_rdd.reduce(lambda x , y: x+y) //rdd code
+
+pseudo set operations:
+union
+
+distinct,intersection,subtract
+//chapter 3 learn and run commands
+
+
+
+              
+
+
+
+         
